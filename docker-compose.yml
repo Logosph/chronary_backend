@@ -1,0 +1,106 @@
+services:
+
+# Databases
+
+  auth_pg:
+    image: postgres:latest
+    container_name: auth_pg
+    environment:
+      POSTGRES_USER: $AUTH_POSTGRES_USER
+      POSTGRES_PASSWORD: $AUTH_POSTGRES_PASSWORD
+      POSTGRES_DB: $AUTH_POSTGRES_NAME
+    env_file:
+      - .env
+    ports:
+      - "25432:5432"
+    volumes:
+      - auth_pg:/var/lib/data
+    command: [ "postgres", "-c", "log_statement=all" ]
+    restart: on-failure
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U", $POSTGRES_USER, "-d", $POSTGRES_NAME ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+
+  time_tracker_pg:
+    image: postgres:latest
+    container_name: time_tracker_pg
+    environment:
+      POSTGRES_USER: $TT_POSTGRES_USER
+      POSTGRES_PASSWORD: $TT_POSTGRES_PASSWORD
+      POSTGRES_DB: $TT_POSTGRES_NAME
+    env_file:
+      - .env
+    ports:
+      - "35432:5432"
+    volumes:
+      - time_tracker_pg:/var/lib/data
+    command: [ "postgres", "-c", "log_statement=all" ]
+    restart: on-failure
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U", $TT_POSTGRES_USER, "-d", $TT_POSTGRES_NAME ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+
+
+# Services
+  auth_service:
+    build:
+      context: auth_service
+      dockerfile: Dockerfile
+    command: sh -c 'sh scripts/startapp.sh'
+    container_name: auth_service
+    ports:
+      - "8001:8001"
+    volumes:
+      - ./auth_service:/app
+    env_file:
+      - ./auth_service/.env
+    healthcheck:
+      test: [ "CMD", "curl", "localhost:8001/docs" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    deploy:
+      resources:
+        limits:
+          memory: 1600M
+    restart: on-failure
+
+  time_tracker_service:
+    build:
+      context: time_tracker_service
+      dockerfile: Dockerfile
+    command: sh -c 'sh scripts/startapp.sh'
+    container_name: time_tracker_service
+    ports:
+      - "8002:8002"
+    volumes:
+      - ./time_tracker_service:/app
+    env_file:
+      - ./time_tracker_service/.env
+    healthcheck:
+      test: [ "CMD", "curl", "localhost:8002/docs" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    deploy:
+      resources:
+        limits:
+          memory: 1600M
+    restart: on-failure
+
+
+volumes:
+  auth_pg:
+  time_tracker_pg:
