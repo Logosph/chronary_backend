@@ -18,7 +18,7 @@ services:
     command: [ "postgres", "-c", "log_statement=all" ]
     restart: on-failure
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U", $POSTGRES_USER, "-d", $POSTGRES_NAME ]
+      test: [ "CMD-SHELL", "pg_isready -U ", $AUTH_POSTGRES_USER, " -d ", $AUTH_POSTGRES_NAME ]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -43,7 +43,7 @@ services:
     command: [ "postgres", "-c", "log_statement=all" ]
     restart: on-failure
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U", $TT_POSTGRES_USER, "-d", $TT_POSTGRES_NAME ]
+      test: [ "CMD-SHELL", "pg_isready -U ", $TT_POSTGRES_USER, " -d ", $TT_POSTGRES_NAME ]
       interval: 5s
       timeout: 5s
       retries: 5
