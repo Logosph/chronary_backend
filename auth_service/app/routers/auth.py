@@ -18,7 +18,7 @@ from app.db.crud import (
 )
 from app.config.settings import settings
 
-router = APIRouter(prefix="/auth", tags=["auth"])
+router = APIRouter(prefix="", tags=["auth"])
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl=f"{settings.API_V1_STR}/auth/login")
 
 async def get_current_user(

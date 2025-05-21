@@ -5,7 +5,8 @@ from app.config.settings import settings
 
 app = FastAPI(
     title=settings.PROJECT_NAME,
-    openapi_url=f"{settings.API_V1_STR}/openapi.json"
+    openapi_url=f"{settings.API_V1_STR}/openapi.json",
+    root_path=f"{settings.API_V1_STR}/auth",
 )
 
 # Set all CORS enabled origins
@@ -18,4 +19,4 @@ app.add_middleware(
 )
 
 # Include routers
-app.include_router(auth.router, prefix=settings.API_V1_STR)
+app.include_router(auth.router)

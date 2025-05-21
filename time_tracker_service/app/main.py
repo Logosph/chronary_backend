@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -10,6 +12,7 @@ app = FastAPI(
     openapi_url=f"{settings.API_V1_STR}/openapi.json",
     docs_url=f"{settings.API_V1_STR}/docs",
     redoc_url=f"{settings.API_V1_STR}/redoc",
+    root_path=f"{settings.API_V1_STR}/time_tracker"
 )
 
 # Configure CORS
@@ -22,10 +25,10 @@ app.add_middleware(
 )
 
 # Include routers
-app.include_router(tag_types.router, prefix=settings.API_V1_STR)
-app.include_router(tags.router, prefix=settings.API_V1_STR)
-app.include_router(subtags.router, prefix=settings.API_V1_STR)
-app.include_router(activities.router, prefix=settings.API_V1_STR)
+app.include_router(tag_types.router)
+app.include_router(tags.router)
+app.include_router(subtags.router)
+app.include_router(activities.router)
 
 @app.on_event("startup")
 async def startup_event():
