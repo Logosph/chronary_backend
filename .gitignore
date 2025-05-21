@@ -1,0 +1,9 @@
+.idea
+.env
+auth_service/.env
+auth_service/.idea
+auth_service/.venv
+auth_service/auth_service.egg-info
+time_tracker_service/.venv
+time_tracker_service/.idea
+time_tracker_service/.env
